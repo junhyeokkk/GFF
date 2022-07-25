@@ -1,6 +1,8 @@
+package nonononono;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+
+import DBUtil;
 
 public class SignUp {
 	Connection conn;
@@ -13,13 +15,14 @@ public class SignUp {
 	private static void InsertMember(String userId ,String userPw, int userAdrres, String userName, String userPhone, String userDetailAdrres) {
 
 		Connection conn  = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		try {	
-			conn = ConnectDatabase.makeConnection();
-			stmt = conn.createStatement();
+			conn = DBUtil.getConnection();
+
 			String s = "INSERT INTO member_t(login_id, password, busan_add_id , name, phone ,current_address) values";
 			s += "('" +  userId + "','" + userPw + "','" + userAdrres + "','" + userName + "','" + userPhone + "','" + userDetailAdrres + "')";
 			System.out.println(s);
+			stmt = conn.prepareStatement(s);
 			int i = stmt.executeUpdate(s);
 			if(i == 1) {
 				System.out.println("레코드 추가 성공");
@@ -27,27 +30,12 @@ public class SignUp {
 			else {
 				System.out.println("레코드 추가 실패");
 			}
-		} catch(SQLException e) {
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			System.exit(0);
-		}  finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		} finally {
+			DBUtil.close(conn, stmt);
 		}
 	}
-	
-
-	
 }

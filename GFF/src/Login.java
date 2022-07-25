@@ -1,34 +1,32 @@
-package Wook;
 
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JToggleButton;
-import java.awt.Font;
-import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class Login extends JFrame{
 	private JTextField textField;
 	private JTextField SignINIDTxt;
 	private JTextField SignINPWTxt;
 	private JPasswordField passwordField;
-
+	static boolean check = true;
 	
 	public Login() {
+		
+				
 		JPanel pnl = new JPanel();
 		pnl.setBackground(new Color(198, 239, 206));
 		
@@ -63,10 +61,24 @@ public class Login extends JFrame{
 		SignINPWTxt.setColumns(10);
 		pnl.add(SignINPWTxt);
 		
+	
 		JButton SignINButton = new JButton("로그인");
 		SignINButton.setFont(new Font("휴먼모음T", Font.BOLD, 15));
 		SignINButton.setBounds(12, 277, 320, 40);
 		pnl.add(SignINButton);
+		
+		SignINButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String loginid = SignINIDTxt.getText();
+				String password = SignINPWTxt.getText();
+				System.out.println(loginid+ password);
+				Method.CheckMember(loginid, password);
+				if(check == false) {
+					dispose();
+				}
+			}
+		});
 		
 		JLabel SignINInfo = new JLabel("혹시, 그푸파가 처음이신가요?");
 		SignINInfo.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
@@ -79,16 +91,27 @@ public class Login extends JFrame{
 		SignUpBtn.setBounds(212, 567, 97, 23);
 		pnl.add(SignUpBtn);
 		
+		  SignUpBtn.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	               UserSignUp usu = new UserSignUp();
+	               usu.setVisible(true);
+	            }
+	         });
+
+		
+		
 //		JLabel backgroundImg = new JLabel("");
 //		backgroundImg.setBackground(Color.WHITE);
 //		backgroundImg.setIcon(new ImageIcon(SellerSignUp.class.getResource("/resource/배달부.png")));
 //		backgroundImg.setBounds(0, 0, 344, 601);
 //		pnl.add(backgroundImg);
-		
+
 		
 		setSize(360, 640);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
+
 
 	public static void main(String[] args) {
 		new Login().setVisible(true);
