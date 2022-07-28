@@ -1,8 +1,9 @@
-
+package hanjoo;
 public class FoodShop {
    private int s_id;
    private String s_name;
    private int sel_id;
+   private int busan_add_id;
    private int type;
    private String s_address;
    private String shop_pic;
@@ -20,13 +21,14 @@ public class FoodShop {
    private String status;
    
    
-   public FoodShop(int s_id, String s_name, int sel_id, int type, String s_address, String shop_pic,
+   public FoodShop(int s_id, String s_name, int sel_id, int busan_add_id, int type, String s_address, String shop_pic,
          String tel, String intro, int min_del_price, int del_price, int del_time, double rating, int dibs_cnt,
          int rei_cnt, String oper_hour, String created_date, String modifieded_date, String status) {
       super();
       this.s_id = s_id;
       this.s_name = s_name;
       this.sel_id = sel_id;
+      this.busan_add_id = busan_add_id;
       this.type = type;
       this.s_address = s_address;
       this.shop_pic = shop_pic;
@@ -64,6 +66,8 @@ public class FoodShop {
    }
 
 
+   
+   
    /**
     * @return the s_id
     */
@@ -100,7 +104,13 @@ public class FoodShop {
    public void setSel_id(int sel_id) {
       this.sel_id = sel_id;
    }
-   /**
+   public int getBusan_add_id() {
+	return busan_add_id;
+   }
+   public void setBusan_add_id(int busan_add_id) {
+  	this.busan_add_id = busan_add_id;
+   }
+/**
     * @return the type
     */
    public int getType() {

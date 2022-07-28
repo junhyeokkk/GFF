@@ -1,4 +1,4 @@
-
+package hanjoo;
 public class Seller {
    private int sel_id;
    private String f_id;

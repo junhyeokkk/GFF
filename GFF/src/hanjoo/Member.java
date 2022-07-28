@@ -1,4 +1,4 @@
-
+package hanjoo;
 public class Member {
 	
 	private int  m_num;

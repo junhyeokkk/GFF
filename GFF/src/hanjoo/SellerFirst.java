@@ -1,4 +1,4 @@
-
+package hanjoo;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
@@ -56,7 +56,7 @@ public class SellerFirst extends JFrame {
       SellerMyLbl.setBounds(79, 2, 183, 32);
       panel.add(SellerMyLbl);
       
-      JLabel SellerName = new JLabel("키미노 나마에와");
+      JLabel SellerName = new JLabel(LoginCenter.getInstance().getSelInfo().getName() + "님 반갑습니다.");
       SellerName.setHorizontalAlignment(SwingConstants.CENTER);
       SellerName.setFont(new Font("휴먼모음T", Font.PLAIN, 17));
       SellerName.setBounds(0, 123, 325, 60);
