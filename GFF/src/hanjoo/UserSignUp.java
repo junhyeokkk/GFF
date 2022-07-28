@@ -1,3 +1,4 @@
+package hanjoo;
 import java.awt.Color; 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -40,7 +41,6 @@ public class UserSignUp extends JDialog {
 	private JButton SignUpBackWard;
 	private JComboBox SignUpAddressCom;
 	private JPanel pnl;
-	private boolean doubleCheckOk;
 
 	private String userId;
 	private String userpw;
@@ -49,154 +49,19 @@ public class UserSignUp extends JDialog {
 	private String userPhone;
 	private String userDetailAddress;
 	
-	private ArrayList<String> IDlist;
-	private HashMap<String, Integer> AreaKey;
+	private ArrayList<String> IDlist = new ArrayList<>();
+	private HashMap<String, Integer> AreaKey = new HashMap<String, Integer>();
 	
 
 	public UserSignUp() {
-		DoubleCheckIdList();
-		CheckArea();
-		
+		Method.DoubleCheckIdList(IDlist);
+		Method.CheckArea(AreaKey);
 		Member member;
 		
 		showView();
 		addListener();
 
 	}
-	
-	// db에 정보 넣기
-	private static void InsertMember(String userId ,String userPw, int userAdrres, String userName, String userPhone, String userDetailAdrres) {
-	
-	      Connection conn  = null;
-	      PreparedStatement stmt = null;
-	      try {   
-	         conn = DBUtil.getConnection();
-	
-	         String s = "INSERT INTO member_t(login_id, password, busan_add_id , name, phone ,current_address) values";
-	         s += "('" +  userId + "','" + userPw + "','" + userAdrres + "','" + userName + "','" + userPhone + "','" + userDetailAdrres + "')";
-	         System.out.println(s);
-	         stmt = conn.prepareStatement(s);
-	         int i = stmt.executeUpdate(s);
-	         if(i == 1) {
-	            System.out.println("레코드 추가 성공");
-	         }
-	         else {
-	            System.out.println("레코드 추가 실패");
-	         }
-	      }  catch (Exception e) {
-	         // TODO Auto-generated catch block
-	         System.out.println(e.getMessage());
-	         System.exit(0);
-	      } finally {
-	         DBUtil.close(conn, stmt);
-	      }
-	   }
-   
-	
-	// 지역 번호 db 불러오기
-   private void CheckArea() {
-	   
-	      Connection conn  = null;
-	      PreparedStatement stmt = null;
-	      try {   
-	    	 conn = DBUtil.getConnection();
-
-	         String s = "Select gu_name, busan_add_id From busan_add_t";
-	         System.out.println(s);
-	         stmt = conn.prepareStatement(s);
-	         ResultSet rs = stmt.executeQuery(s);
-	         
-	         AreaKey = new HashMap<>();
-	         while(rs.next()) {
-	        	 AreaKey.put(rs.getString("gu_name"), rs.getInt("busan_add_id"));  
-	         }
-//
-	         System.out.println(AreaKey);
-	         
-//			         int i = stmt.executeUpdate(s);
-//			         if(i == 1) {
-//			            System.out.println("레코드 추가 성공");
-//			         }
-//			         else {
-//			            System.out.println("레코드 추가 실패");
-//			         }
-	      }  catch (Exception e) {
-	         e.printStackTrace();
-	      } finally {
-	         DBUtil.close(conn, stmt);
-	      }
-	   }
-	
-	// db에 회원 id목록 불러오기
-   private void DoubleCheckIdList() {
-	   
-	      Connection conn  = null;
-	      PreparedStatement stmt = null;
-	      try {   
-	    	 conn = DBUtil.getConnection();
-
-	         String s = "Select login_id From member_t";
-	         System.out.println(s);
-	         stmt = conn.prepareStatement(s);
-	         ResultSet rs = stmt.executeQuery(s);
-	         
-	         IDlist = new ArrayList<>();
-	         while(rs.next()) {
-	        	 IDlist.add(rs.getString("login_id"));      
-	         }
-//
-	         System.out.println(IDlist);
-	         
-//		         int i = stmt.executeUpdate(s);
-//		         if(i == 1) {
-//		            System.out.println("레코드 추가 성공");
-//		         }
-//		         else {
-//		            System.out.println("레코드 추가 실패");
-//		         }
-	      }  catch (Exception e) {
-	         e.printStackTrace();
-	      } finally {
-	         DBUtil.close(conn, stmt);
-	      }
-	   }
-	
-	
-	
-//   private void CheckMember() {
-//	   	String id = "aaaa1111";
-//	      Connection conn  = null;
-//	      PreparedStatement stmt = null;
-//	      try {   
-//	    	 conn = DBUtil.getConnection();
-//
-//	         String s = "Select login_id, password From member_t where login_id = ";
-//	         s +=  "'" +id + "'" ;
-//	         System.out.println(s);
-//	         stmt = conn.prepareStatement(s);
-//	         ResultSet rs = stmt.executeQuery(s);
-//	         
-//	         ArrayList<String> list = new ArrayList<>();
-//	         while(rs.next()) {
-//	            list.add(rs.getString("login_id"));
-//	            list.add(rs.getString("password"));         
-//	         }
-//
-//	         System.out.println(list);
-//	         
-////	         int i = stmt.executeUpdate(s);
-////	         if(i == 1) {
-////	            System.out.println("레코드 추가 성공");
-////	         }
-////	         else {
-////	            System.out.println("레코드 추가 실패");
-////	         }
-//	      }  catch (Exception e) {
-//	         e.printStackTrace();
-//	      } finally {
-//	         DBUtil.close(conn, stmt);
-//	      }
-//	   }
 
 	private void showView() {
 
@@ -330,7 +195,8 @@ public class UserSignUp extends JDialog {
 	      OverlapBtn = new JButton("중복");
 	      OverlapBtn.setBounds(224, 110, 108, 40);
 	      pnl.add(OverlapBtn);
-
+	      
+	      setResizable(false);
 	      setSize(360, 640);
 	}
 
@@ -396,7 +262,7 @@ public class UserSignUp extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				doubleCheckOk = CheckMethod.IdDoubleCheck(IDlist, doubleCheckOk, OverlapBtn, SignUpIDTxt, SignUpIDTxt.getText(), pnl);
+				CheckMethod.IdDoubleCheck(IDlist, OverlapBtn, SignUpIDTxt, SignUpIDTxt.getText(), pnl);
 				
 			}
 		});
@@ -414,7 +280,7 @@ public class UserSignUp extends JDialog {
 					JOptionPane.showMessageDialog(UserSignUp.this, "ID를 확인해주세요.");
 				}
 				// 중복확인을 안눌었을때
-				else if (doubleCheckOk == false) {
+				else if (OverlapBtn.getText().equals("중복")) {
 					JOptionPane.showMessageDialog(UserSignUp.this, "ID 중복확인을 해주세요.");
 				}
 				// 비밀번호 길이가 8보다 작고, pw, pw2가 다를때
@@ -444,7 +310,7 @@ public class UserSignUp extends JDialog {
 					userDetailAddress = SignUpAddress2Txt.getText();
 					JOptionPane.showMessageDialog(UserSignUp.this, "가입이 완료되었습니다.");
 					
-					InsertMember(userId ,userpw, userAddress, userName, userPhone, userDetailAddress);
+					Method.InsertMember(userId ,userpw, userAddress, userName, userPhone, userDetailAddress);
 					setVisible(false);
 
 				}

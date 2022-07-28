@@ -1,4 +1,4 @@
-
+package hanjoo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -92,6 +92,7 @@ public class MyRestList extends JFrame {
 			jb.setFont(new Font("휴먼모음T", Font.PLAIN, 9));
 			jb.setBounds(251, 43, 67, 23);
 			RestPnl.add(jb);
+			
 			jb.addActionListener(detailBtnAction(foodList.get(j).getS_id()));
 			
 			
@@ -106,19 +107,18 @@ public class MyRestList extends JFrame {
 
 		}
 
-		ArrayList<JButton> jj = new ArrayList<>();
-		ArrayList<String> js = new ArrayList<>();
-		js.add("ss");
-
-		jj.add(HomeBtn);
-
-		JButton HomeBtn2;
 //      HomeBtn2 = Method.SeladdPnl(panel, groupLayout).get(0)
 //      jj.add(Method.SeladdPnl(panel, groupLayout).get(0));
 //		addDetailListener();
 	}
 
 
+	
+	
+	private static void getFoodShopInfo() {
+		
+	}
+	
 
 	/**
 	 * 각 메뉴의 [상세정보] 조회를 위한 액션
@@ -134,7 +134,14 @@ public class MyRestList extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(s_id);
 				
-				FoodShop shopInfo = Method.getDetailRestInfo(s_id);
+				Method.getDetailRestInfo(s_id);
+				
+				System.out.println("겟인스턴스푸드인포:    " + LoginCenter.getInstance().getFoodInfo().getS_name());
+				new SellerRestDetail().setVisible(true);
+				
+				
+				
+				
 				
 				//상세화면을 조회화는 JFrame이 열려야함 . 
 				//상세화면을 열 때 필요한 데이터를 shopInfo에 담아서 쓰면 될 것으로 생각이 됨

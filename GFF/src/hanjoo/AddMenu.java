@@ -1,3 +1,4 @@
+package hanjoo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,9 +27,16 @@ public class AddMenu extends JFrame{
 	private JTextField textField;
 	private JTextField MenuNameTxt;
 	private JTextField MenuPriceTxt;
+	private JButton AddComplete;
 
 	
+	
 	public AddMenu() {
+		showView();
+		listener();
+	}
+	
+	private void showView() {
 		JPanel pnl = new JPanel();
 		pnl.setBackground(new Color(198, 239, 206));
 		
@@ -52,7 +60,7 @@ public class AddMenu extends JFrame{
 		pnl.add(MenuNameTxt);
 		MenuNameTxt.setColumns(10);
 		
-		JButton AddComplete = new JButton("추가완료");
+		AddComplete = new JButton("추가완료");
 		AddComplete.setFont(new Font("휴먼모음T", Font.BOLD, 15));
 		AddComplete.setBounds(40, 326, 97, 40);
 		pnl.add(AddComplete);
@@ -75,6 +83,15 @@ public class AddMenu extends JFrame{
 		
 		setSize(360, 420);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+	private void listener() {
+		AddComplete.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Method.menuInsert(MenuNameTxt.getText(), MenuPriceTxt.getText());
+			}
+		});
 	}
 
 	public static void main(String[] args) {
