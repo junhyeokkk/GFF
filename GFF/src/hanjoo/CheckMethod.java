@@ -1,4 +1,3 @@
-package hanjoo;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -240,10 +239,10 @@ public class CheckMethod {
 	}
 	
 	// 중복확인
-	public static void IdDoubleCheck(ArrayList<String> IdList, JButton OverlapBtn, JTextField IdTxt, String IdText, JPanel pnl) {
+	public static boolean IdDoubleCheck(ArrayList<String> IdList, boolean doubleCheckOk, JButton OverlapBtn, JTextField IdTxt, String IdText, JPanel pnl) {
 		boolean sameId = false;
 		
-		if (OverlapBtn.getText().equals("중복")) {
+		if (!(doubleCheckOk == true)) {
 			if (IdText.length() >= 7) {
 				
 				for (int i = 0; i < IdList.size(); i++) {
@@ -254,29 +253,35 @@ public class CheckMethod {
 				
 				if (sameId == true) {
 					JOptionPane.showMessageDialog(pnl, "이미 존재하는 ID 입니다.");
+					return false;
 				}
 				else {
 					
 					int result = JOptionPane.showConfirmDialog(pnl, "사용가능한 ID입니다. 사용하시겠습니까?",
 							"Confirm", JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.CLOSED_OPTION) {
+						return false;
 					}
 					else if (result == JOptionPane.YES_OPTION) {
 						IdTxt.setEnabled(false);
 						OverlapBtn.setText("ID수정하기");
+						return true;
 					}
 					else {
+						return false;
 					}
 				}
 			}
 			else {
 				
 				JOptionPane.showMessageDialog(pnl, "ID를 7문자 이상 작성해 주세요.");
+				return false;
 			}
 		}
 		else  {
 			OverlapBtn.setText("중복");
 			IdTxt.setEnabled(true);
+			return false;
 		}
 	}
 	

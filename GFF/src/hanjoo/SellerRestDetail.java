@@ -1,15 +1,15 @@
-package hanjoo;
+
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-import javax.swing.Box;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -22,8 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class SellerRestDetail extends JFrame {
 	private JPanel panel;
@@ -33,7 +31,7 @@ public class SellerRestDetail extends JFrame {
 
 	private int yy = 70;
 	private int zz = 160;
-	private int xx = 170;
+	private int xx = 160;
 	private int total;
 	private JTextField RestName;
 	private JTabbedPane tabbedPane;
@@ -46,10 +44,8 @@ public class SellerRestDetail extends JFrame {
 	private JPanel restInfoPnl;
 	private JPanel reviewTab;
 	private JPanel infoTab;
-	private JButton MenuAddBtn;
 	private JTextArea RevTxt;
 	private int count;
-	private int count2;
 
 
 	public SellerRestDetail() {
@@ -83,28 +79,16 @@ public class SellerRestDetail extends JFrame {
 		restInfoPnl.setLayout(null);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		
-		JScrollPane scrollPane2 = new JScrollPane(tabbedPane);
-		panel.add(scrollPane2);
-		
-		Box box = Box.createVerticalBox();
-		for (int i = 0; i < 100; i++) {
-            box.add(new JLabel("Hello, StackOverflow!"));
-		}
-		
-		출처: https://unikys.tistory.com/211 [All-round programmer:티스토리]
 		// 탭메뉴챵이름.add("탭메뉴명",추가할패널);
 		menuTab = new JPanel();
-		
-		tabbedPane.add(new JScrollPane(menuTab),"        메뉴        " );
+		tabbedPane.add("        메뉴        ", new JScrollPane(menuTab));
 		menuTab.setLayout(null);
 		infoTab = new JPanel();
-		tabbedPane.add(new JScrollPane(infoTab),"        정보        " );
+		tabbedPane.add("        정보        ", new JScrollPane(infoTab));
 		infoTab.setLayout(null);
 //		infoTab.setSize(290, 500);
 		reviewTab = new JPanel();
-		reviewTab.add(box);
-		tabbedPane.add( new JScrollPane(reviewTab),"        리뷰        ");
+		tabbedPane.add("        리뷰        ", new JScrollPane(reviewTab));
 		reviewTab.setLayout(null);
 
 		JPanel panel_1 = new JPanel();
@@ -184,17 +168,17 @@ public class SellerRestDetail extends JFrame {
 		BusTel.setBounds(0, 86, 78, 25);
 		BusinessInfoPnl.add(BusTel);
 
-		JLabel BusNameLbl = new JLabel(LoginCenter.getInstance().getFoodInfo().getS_name());
+		JLabel BusNameLbl = new JLabel("값을 입력해주세요.");
 		BusNameLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
 		BusNameLbl.setBounds(90, 35, 167, 25);
 		BusinessInfoPnl.add(BusNameLbl);
 
-		JLabel BusTimeLbl = new JLabel(LoginCenter.getInstance().getFoodInfo().getOper_hour());
+		JLabel BusTimeLbl = new JLabel("값을 입력해주세요.");
 		BusTimeLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
 		BusTimeLbl.setBounds(90, 61, 167, 25);
 		BusinessInfoPnl.add(BusTimeLbl);
 
-		JLabel BustelLbl = new JLabel(LoginCenter.getInstance().getFoodInfo().getTel());
+		JLabel BustelLbl = new JLabel("값을 입력해주세요.");
 		BustelLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
 		BustelLbl.setBounds(90, 86, 167, 25);
 		BusinessInfoPnl.add(BustelLbl);
@@ -234,17 +218,17 @@ public class SellerRestDetail extends JFrame {
 		BusAdress.setBounds(0, 86, 78, 25);
 		SellerInfoPnl.add(BusAdress);
 
-		JLabel SellerNameLbl = new JLabel(LoginCenter.getInstance().getSelInfo().getName());
+		JLabel SellerNameLbl = new JLabel("값을 입력해주세요.");
 		SellerNameLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
 		SellerNameLbl.setBounds(90, 35, 167, 25);
 		SellerInfoPnl.add(SellerNameLbl);
 
-		JLabel BusName1Lbl = new JLabel(LoginCenter.getInstance().getFoodInfo().getS_name());
+		JLabel BusName1Lbl = new JLabel("값을 입력해주세요.");
 		BusName1Lbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
 		BusName1Lbl.setBounds(90, 61, 167, 25);
 		SellerInfoPnl.add(BusName1Lbl);
 
-		JLabel BusAdressLbl = new JLabel(LoginCenter.getInstance().getFoodInfo().getS_address());
+		JLabel BusAdressLbl = new JLabel("값을 입력해주세요.");
 		BusAdressLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
 		BusAdressLbl.setBounds(90, 86, 167, 25);
 		SellerInfoPnl.add(BusAdressLbl);
@@ -253,6 +237,47 @@ public class SellerRestDetail extends JFrame {
 		SellerBtn.setFont(new Font("휴먼모음T", Font.PLAIN, 9));
 		SellerBtn.setBounds(214, 1, 55, 30);
 		SellerInfoPnl.add(SellerBtn);
+
+//		JPanel MenuAddPnl = new JPanel();
+//		MenuAddPnl.setBackground(Color.WHITE);
+//		MenuAddPnl.setBounds(12, y, 269, 120);
+//		menuTab.add(MenuAddPnl);
+//		MenuAddPnl.setLayout(null);
+//
+//		JLabel MenuName = new JLabel("값을 입력하세요.");
+//		MenuName.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+//		MenuName.setBounds(77, 10, 160, 30);
+//		MenuAddPnl.add(MenuName);
+//
+//		JLabel OrderCount = new JLabel("주문횟수");
+//		OrderCount.setFont(new Font("휴먼모음T", Font.PLAIN, 12));
+//		OrderCount.setBounds(12, 90, 53, 20);
+//		MenuAddPnl.add(OrderCount);
+//
+//		JLabel OrderCountLbl = new JLabel("값을 입력하세요.");
+//		OrderCountLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 12));
+//		OrderCountLbl.setBounds(77, 90, 180, 20);
+//		MenuAddPnl.add(OrderCountLbl);
+//
+//		JLabel MenuNameLbl = new JLabel("메뉴이름");
+//		MenuNameLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+//		MenuNameLbl.setBounds(12, 10, 53, 30);
+//		MenuAddPnl.add(MenuNameLbl);
+//
+//		JCheckBox MenuCheck = new JCheckBox("");
+//		MenuCheck.setBackground(Color.WHITE);
+//		MenuCheck.setBounds(245, 0, 24, 30);
+//		MenuAddPnl.add(MenuCheck);
+//
+//		JLabel Price_1_1 = new JLabel("가격");
+//		Price_1_1.setBounds(12, 50, 53, 30);
+//		MenuAddPnl.add(Price_1_1);
+//		Price_1_1.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+//
+//		JLabel MenuPrice_1 = new JLabel("값을 입력하세요.");
+//		MenuPrice_1.setBounds(77, 50, 180, 30);
+//		MenuAddPnl.add(MenuPrice_1);
+//		MenuPrice_1.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
 
 		JLabel MinAmount = new JLabel("최소주문금액");
 		MinAmount.setHorizontalAlignment(SwingConstants.CENTER);
@@ -272,19 +297,19 @@ public class SellerRestDetail extends JFrame {
 		DeliveryTip.setBounds(12, 90, 90, 30);
 		restInfoPnl.add(DeliveryTip);
 
-		JLabel MinAmountLbl = new JLabel(String.valueOf(LoginCenter.getInstance().getFoodInfo().getMin_del_price()));
+		JLabel MinAmountLbl = new JLabel("최소주문금액");
 		MinAmountLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		MinAmountLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
 		MinAmountLbl.setBounds(114, 10, 90, 30);
 		restInfoPnl.add(MinAmountLbl);
 
-		JLabel DelivaryTimeLbl = new JLabel(String.valueOf(LoginCenter.getInstance().getFoodInfo().getDel_time()));
+		JLabel DelivaryTimeLbl = new JLabel("소요시간");
 		DelivaryTimeLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		DelivaryTimeLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
 		DelivaryTimeLbl.setBounds(114, 50, 90, 30);
 		restInfoPnl.add(DelivaryTimeLbl);
 
-		JLabel DelivaryTipLbl = new JLabel(String.valueOf(LoginCenter.getInstance().getFoodInfo().getMin_del_price()));
+		JLabel DelivaryTipLbl = new JLabel("배달팁");
 		DelivaryTipLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		DelivaryTipLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
 		DelivaryTipLbl.setBounds(114, 90, 90, 30);
@@ -302,7 +327,7 @@ public class SellerRestDetail extends JFrame {
 		Review.setBounds(12, 116, 70, 43);
 		restPnl.add(Review);
 
-		JLabel ReviewCount = new JLabel(String.valueOf(LoginCenter.getInstance().getFoodInfo().getRei_cnt()));
+		JLabel ReviewCount = new JLabel("999+");
 		ReviewCount.setHorizontalAlignment(SwingConstants.CENTER);
 		ReviewCount.setFont(new Font("휴먼모음T", Font.PLAIN, 21));
 		ReviewCount.setBounds(87, 116, 70, 43);
@@ -314,7 +339,7 @@ public class SellerRestDetail extends JFrame {
 		Pick.setBounds(162, 116, 70, 43);
 		restPnl.add(Pick);
 
-		JLabel PickCount = new JLabel(String.valueOf(LoginCenter.getInstance().getFoodInfo().getDibs_cnt()));
+		JLabel PickCount = new JLabel("999+");
 		PickCount.setHorizontalAlignment(SwingConstants.CENTER);
 		PickCount.setFont(new Font("휴먼모음T", Font.PLAIN, 21));
 		PickCount.setBounds(237, 116, 70, 43);
@@ -323,7 +348,7 @@ public class SellerRestDetail extends JFrame {
 		RestName = new JTextField();
 		RestName.setFont(new Font("휴먼모음T", Font.PLAIN, 25));
 		RestName.setHorizontalAlignment(SwingConstants.CENTER);
-		RestName.setText(LoginCenter.getInstance().getFoodInfo().getS_name());
+		RestName.setText("가게이름띠");
 		RestName.setBounds(12, 10, 240, 43);
 		restPnl.add(RestName);
 		RestName.setColumns(10);
@@ -339,7 +364,7 @@ public class SellerRestDetail extends JFrame {
 		StarImg.setBounds(87, 63, 70, 43);
 		restPnl.add(StarImg);
 
-		JLabel StarPoint = new JLabel(String.valueOf(LoginCenter.getInstance().getFoodInfo().getRating()));
+		JLabel StarPoint = new JLabel("5.0");
 		StarPoint.setFont(new Font("휴먼모음T", Font.PLAIN, 21));
 		StarPoint.setBounds(164, 63, 154, 43);
 		restPnl.add(StarPoint);
@@ -355,10 +380,26 @@ public class SellerRestDetail extends JFrame {
 						GroupLayout.PREFERRED_SIZE, 283, GroupLayout.PREFERRED_SIZE))
 				.addGroup(gl_panel.createSequentialGroup().addGap(15).addComponent(tabbedPane,
 						GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)));
+//		gl_panel.setVerticalGroup(
+//			gl_panel.createParallelGroup(Alignment.LEADING)
+//				.addGroup(gl_panel.createSequentialGroup()
+//					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+//						.addComponent(backBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+//						.addGroup(gl_panel.createSequentialGroup()
+//							.addGap(2)
+//							.addComponent(mYReview, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+//						.addComponent(homeBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+//					.addGap(18)
+//					.addComponent(restPnl, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+//					.addGap(18)
+//					.addComponent(restInfoPnl, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+//					.addGap(18)
+//					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE))
+//		);
 
 		panel.setLayout(gl_panel);
 
-		MenuAddBtn = new JButton("추가");
+		JButton MenuAddBtn = new JButton("추가");
 		MenuAddBtn.setBounds(12, 10, 57, 36);
 		menuTab.add(MenuAddBtn);
 		MenuAddBtn.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
@@ -414,22 +455,56 @@ public class SellerRestDetail extends JFrame {
 				JOptionPane.showInputDialog(null, "배달팁을 수정해주세요");
 			}
 		});
-		
-		
-		ArrayList<Menu> menuList = new ArrayList<>();
-		menuList = Method.myMenuList(LoginCenter.getInstance().getFoodInfo().getS_id());
-		addMenuPnl(menuList);
-		
-		
-		MenuAddBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new AddMenu().setVisible(true);
-			}
-		});
 
-		
+//		JPanel RevPnl = new JPanel();
+//		RevPnl.setBounds(12, 70, 269, 150);
+//		reviewTab.add(RevPnl);
+//		RevPnl.setLayout(null);
+//		RevPnl.setBackground(Color.WHITE);
+//
+//		JLabel RevUserName = new JLabel("유저이름");
+//		RevUserName.setHorizontalAlignment(SwingConstants.CENTER);
+//		RevUserName.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+//		RevUserName.setBounds(0, 2, 78, 25);
+//		RevPnl.add(RevUserName);
+//
+//		JLabel RevMenu = new JLabel("주문메뉴");
+//		RevMenu.setHorizontalAlignment(SwingConstants.CENTER);
+//		RevMenu.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+//		RevMenu.setBounds(0, 33, 78, 25);
+//		RevPnl.add(RevMenu);
+//
+//		JLabel RevUserLbl = new JLabel("받아온 값");
+//		RevUserLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
+//		RevUserLbl.setBounds(90, 3, 104, 25);
+//		RevPnl.add(RevUserLbl);
+//
+//		JLabel RevMenuLbl = new JLabel("받아온 값");
+//		RevMenuLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
+//		RevMenuLbl.setBounds(90, 33, 167, 25);
+//		RevPnl.add(RevMenuLbl);
+//
+//		JButton RevBtn = new JButton("삭제");
+//		RevBtn.setFont(new Font("휴먼모음T", Font.PLAIN, 9));
+//		RevBtn.setBounds(214, 1, 55, 30);
+//		RevPnl.add(RevBtn);
+//
+//		RevTxt = new JTextArea();
+//		RevTxt.setEnabled(false);
+//		RevTxt.setHorizontalAlignment(SwingConstants.CENTER);
+//		RevTxt.setText("아따 맛이 지립니다요");
+//		RevTxt.setFont(new Font("휴먼모음T", Font.PLAIN, 11));
+//
+//		RevTxt.setBounds(10, 68, 247, 72);
+//		RevPnl.add(RevTxt);
+//		RevTxt.setColumns(10);
+		addMenuPnl();
+		addMenuPnl();
+		addMenuPnl();
+		addMenuPnl();
+		addMenuPnl();
+		addRevPnl();
+		addRevPnl();
 		addRevPnl();
 
 		setSize(360, 640);
@@ -438,7 +513,7 @@ public class SellerRestDetail extends JFrame {
 	}
 
 	public void addRevPnl() {
-		count2++;
+
 
 		JPanel RevPnl = new JPanel();
 		RevPnl.setBounds(12, yy, 269, 150);
@@ -481,124 +556,78 @@ public class SellerRestDetail extends JFrame {
 		RevPnl.add(RevTxt);
 		RevTxt.setEnabled(false);
 		RevTxt.setColumns(10);
-		System.out.println(count2);
-		
-		
-//		tabbedPane.addChangeListener(new ChangeListener() {
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				if (tabbedPane.getSelectedIndex() == 1) {
-//					panel.setPreferredSize(new Dimension(290, 780));
-//				} else if (tabbedPane.getSelectedIndex() == 2){
-//					panel.setPreferredSize(new Dimension(290,500 + (count2 * 160)));
-//					gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-//							.addGroup(gl_panel.createSequentialGroup()
-//									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-//											.addComponent(backBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-//											.addGroup(gl_panel.createSequentialGroup().addGap(2).addComponent(mYReview,
-//													GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
-//											.addComponent(homeBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
-//									.addGap(18).addComponent(restPnl, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-//									.addGap(18)
-//									.addComponent(restInfoPnl, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-//									.addGap(18)
-//									.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, zz + yy, GroupLayout.PREFERRED_SIZE)));
-//				} 
-//			}
-//		});
 
-		
-		
 	}
-	
-	public void addMenuPnl(ArrayList<Menu> mml) {
-		
-		for (int i = 0; i < mml.size(); i++) {
-			count++;
-			
-			JPanel MenuAddPnl = new JPanel();
-			MenuAddPnl.setBackground(Color.WHITE);
-			MenuAddPnl.setBounds(12, y, 269, 120);
-			menuTab.add(MenuAddPnl);
-			MenuAddPnl.setLayout(null);
-			y += z;
-			JLabel MenuName = new JLabel(mml.get(i).getMenu_name());
-			JLabel OrderCountLbl = new JLabel(toString().valueOf(mml.get(i).getOrd_cnt()));
-			JLabel MenuPrice = new JLabel(toString().valueOf(mml.get(i).getMenu_price()));
-			
-//			lbl.add(new JLabelList(MenuName, OrderCountLbl, MenuPrice));
-//			for (int i = 0; i < mml.size(); i++) {
-//				lbl.get(i).getLb1().setText(mml.get(i).getMenu_name());
-//			}
-			
-			MenuName.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
-			MenuName.setBounds(77, 10, 160, 30);
-			MenuAddPnl.add(MenuName);
 
-			
-			MenuPrice.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
-			MenuPrice.setBounds(77, 50, 180, 30);
-			MenuAddPnl.add(MenuPrice);
+	public void addMenuPnl() {
+		count++;
 
-			JLabel OrderCount = new JLabel("주문횟수");
-			OrderCount.setFont(new Font("휴먼모음T", Font.PLAIN, 12));
-			OrderCount.setBounds(12, 90, 53, 20);
-			MenuAddPnl.add(OrderCount);
+		JPanel MenuAddPnl = new JPanel();
+		MenuAddPnl.setBackground(Color.WHITE);
+		MenuAddPnl.setBounds(12, y, 269, 120);
+		menuTab.add(MenuAddPnl);
+		MenuAddPnl.setLayout(null);
+		y += z;
 
-			
-			OrderCountLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 12));
-			OrderCountLbl.setBounds(77, 90, 180, 20);
-			MenuAddPnl.add(OrderCountLbl);
+		JLabel MenuName = new JLabel("값을 입력하세요.");
+		MenuName.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+		MenuName.setBounds(77, 10, 160, 30);
+		MenuAddPnl.add(MenuName);
 
-			JLabel MenuNameLbl = new JLabel("메뉴이름");
-			MenuNameLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
-			MenuNameLbl.setBounds(12, 10, 53, 30);
-			MenuAddPnl.add(MenuNameLbl);
+		JLabel MenuPrice = new JLabel("값을 입력하세요.");
+		MenuPrice.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+		MenuPrice.setBounds(77, 50, 180, 30);
+		MenuAddPnl.add(MenuPrice);
 
-			JLabel Price_1 = new JLabel("가격");
-			Price_1.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
-			Price_1.setBounds(12, 50, 53, 30);
-			MenuAddPnl.add(Price_1);
+		JLabel OrderCount = new JLabel("주문횟수");
+		OrderCount.setFont(new Font("휴먼모음T", Font.PLAIN, 12));
+		OrderCount.setBounds(12, 90, 53, 20);
+		MenuAddPnl.add(OrderCount);
 
-			JCheckBox MenuCheck = new JCheckBox("");
-			MenuCheck.setBackground(Color.WHITE);
-			MenuCheck.setBounds(245, 0, 24, 30);
-			MenuAddPnl.add(MenuCheck);
+		JLabel OrderCountLbl = new JLabel("값을 입력하세요.");
+		OrderCountLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 12));
+		OrderCountLbl.setBounds(77, 90, 180, 20);
+		MenuAddPnl.add(OrderCountLbl);
 
-			gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-					.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-									.addComponent(backBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-									.addGroup(gl_panel.createSequentialGroup().addGap(2).addComponent(mYReview,
-											GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
-									.addComponent(homeBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
-							.addGap(18).addComponent(restPnl, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(restInfoPnl, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, x + y, GroupLayout.PREFERRED_SIZE)));
-			
-			System.out.println(x + y);
-			System.out.println(count);
-			
-			tabbedPane.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					if (tabbedPane.getSelectedIndex() == 1) {
-						panel.setPreferredSize(new Dimension(290, 780));
-					} else if (tabbedPane.getSelectedIndex() == 0){
-						panel.setPreferredSize(new Dimension(290,485 + (count * 129)));
-					} 
+		JLabel MenuNameLbl = new JLabel("메뉴이름");
+		MenuNameLbl.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+		MenuNameLbl.setBounds(12, 10, 53, 30);
+		MenuAddPnl.add(MenuNameLbl);
+
+		JLabel Price_1 = new JLabel("가격");
+		Price_1.setFont(new Font("휴먼모음T", Font.PLAIN, 15));
+		Price_1.setBounds(12, 50, 53, 30);
+		MenuAddPnl.add(Price_1);
+
+		JCheckBox MenuCheck = new JCheckBox("");
+		MenuCheck.setBackground(Color.WHITE);
+		MenuCheck.setBounds(245, 0, 24, 30);
+		MenuAddPnl.add(MenuCheck);
+
+		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(backBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel.createSequentialGroup().addGap(2).addComponent(mYReview,
+										GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+								.addComponent(homeBtn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+						.addGap(18).addComponent(restPnl, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+						.addGap(18)
+						.addComponent(restInfoPnl, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+						.addGap(18)
+						.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, x + y, GroupLayout.PREFERRED_SIZE)));
+		tabbedPane.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if (tabbedPane.getSelectedIndex() == 1) {
+					panel.setPreferredSize(new Dimension(290, 780));
+				} else {
+					panel.setPreferredSize(new Dimension(290, 200 + (count * 220)));
 				}
-			});
-		}
-		
-		
-		
-	}
-	
+			}
+		});
 
-	
+	}
 
 	public static void main(String[] args) {
 

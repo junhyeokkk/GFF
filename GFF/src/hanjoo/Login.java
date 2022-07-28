@@ -1,4 +1,4 @@
-package hanjoo;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -31,9 +31,21 @@ public class Login extends JFrame {
 	private JPanel pnl;
 	static boolean check = true;
 	
+	
+
+	
+	public JPanel getPnl() {
+		return pnl;
+	}
+
+	public void setPnl(JPanel pnl) {
+		this.pnl = pnl;
+	}
+
 	public Login() {
 		showView();
 		listener();
+
 	}
 
 	private void showView() {
@@ -100,7 +112,12 @@ public class Login extends JFrame {
 		group.add(UserRad);
 		group.add(SellerRad);
 
-		setResizable(false);
+//	      JLabel backgroundImg = new JLabel("");
+//	      backgroundImg.setBackground(Color.WHITE);
+//	      backgroundImg.setIcon(new ImageIcon(SellerSignUp.class.getResource("/resource/배달부.png")));
+//	      backgroundImg.setBounds(0, 0, 344, 601);
+//	      pnl.add(backgroundImg);
+
 		setSize(360, 640);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -127,11 +144,12 @@ public class Login extends JFrame {
 				} else {
 
 					ssu.setVisible(true);
+
 				}
+
 			}
 		});
-		
-		// 로그인 눌렀을때
+
 		SignINButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -160,8 +178,10 @@ public class Login extends JFrame {
 				} else {
 					JOptionPane.showMessageDialog(Login.this, "로그인 유형을 선택하세요.");
 				}
+
 			}
 		});
+
 	}
 
 	public static void main(String[] args) {

@@ -1,4 +1,3 @@
-package hanjoo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -30,11 +29,12 @@ public class SellerSignUp extends JDialog{
 	private JTextField SignUpTelTxt2;
 	private JTextField SignUpTelTxt3;
 	private JLabel PwCheck;
+	private boolean doubleCheckOk;
 	private JButton OverlapBtn;
 	private JButton SignUpComplete;
 	private JButton SignUpBackWard;
 	private JPasswordField passwordField;
-	private ArrayList<String> IDlist = new ArrayList<String>();
+	private ArrayList<String> IDlist;
 	
 	private JPanel pnl;
 	
@@ -46,11 +46,67 @@ public class SellerSignUp extends JDialog{
 
 	public SellerSignUp() {
 		
-		Method.selDoubleCheckIdList(IDlist);
+		DoubleCheckIdList();
 		ShowView();
 		Listener();
 	}
 	
+	// db에 판매자 정보 넣기
+	private static void InsertMember(String userId ,String userPw, String userName, String userPhone) {
+		
+	      Connection conn  = null;
+	      PreparedStatement stmt = null;
+	      try {   
+	         conn = DBUtil.getConnection();
+	
+	         String s = "INSERT INTO seller_t(sel_log_id, sel_pw, sel_name , sel_tel) values";
+	         s += "('" +  userId + "','" + userPw + "','" + userName + "','" + userPhone + "')";
+	         System.out.println(s);
+	         stmt = conn.prepareStatement(s);
+	         int i = stmt.executeUpdate(s);
+	         if(i == 1) {
+	            System.out.println("레코드 추가 성공");
+	         }
+	         else {
+	            System.out.println("레코드 추가 실패");
+	         }
+	      }  catch (Exception e) {
+	         // TODO Auto-generated catch block
+	         System.out.println(e.getMessage());
+	         System.exit(0);
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	   }
+ 
+	
+	// db에 판매자 id목록 불러오기
+	 private void DoubleCheckIdList() {
+		   
+		      Connection conn  = null;
+		      PreparedStatement stmt = null;
+		      try {   
+		    	 conn = DBUtil.getConnection();
+	
+		         String s = "Select sel_log_id From seller_t";
+		         System.out.println(s);
+		         stmt = conn.prepareStatement(s);
+		         ResultSet rs = stmt.executeQuery(s);
+		         
+		         IDlist = new ArrayList<>();
+		         while(rs.next()) {
+		        	 IDlist.add(rs.getString("sel_log_id"));      
+		         }
+		         System.out.println(IDlist);
+		         
+	
+		      }  catch (Exception e) {
+		         e.printStackTrace();
+		      } finally {
+		         DBUtil.close(conn, stmt);
+		      }
+		   }
+
 	private void ShowView() {
 		pnl = new JPanel();
 		pnl.setBackground(new Color(198, 239, 206));
@@ -140,7 +196,7 @@ public class SellerSignUp extends JDialog{
 		SignUpComplete.setBounds(40, 520, 97, 40);
 		pnl.add(SignUpComplete);
 
-		SignUpBackWard = new JButton("닫기");
+		SignUpBackWard = new JButton("뒤로가기");
 		SignUpBackWard.setFont(new Font("휴먼모음T", Font.BOLD, 15));
 		SignUpBackWard.setBounds(205, 520, 97, 40);
 		pnl.add(SignUpBackWard);
@@ -158,8 +214,7 @@ public class SellerSignUp extends JDialog{
 		JLabel hyphen_1 = new JLabel("-");
 		hyphen_1.setBounds(231, 160, 19, 40);
 		pnl.add(hyphen_1);
-		
-		setResizable(false);
+
 		setSize(360, 640);
 
 	}
@@ -229,7 +284,7 @@ public class SellerSignUp extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CheckMethod.IdDoubleCheck(IDlist, OverlapBtn, SignUpIDTxt, SignUpIDTxt.getText(), pnl);
+				doubleCheckOk = CheckMethod.IdDoubleCheck(IDlist, doubleCheckOk, OverlapBtn, SignUpIDTxt, SignUpIDTxt.getText(), pnl);
 				
 			}
 		});
@@ -246,7 +301,7 @@ public class SellerSignUp extends JDialog{
 							JOptionPane.showMessageDialog(SellerSignUp.this, "ID를 확인해주세요.");
 						}
 						// 중복확인을 안눌었을때
-						else if (OverlapBtn.getText().equals("중복")) {
+						else if (doubleCheckOk == false) {
 							JOptionPane.showMessageDialog(SellerSignUp.this, "ID 중복확인을 해주세요.");
 						}
 						// 비밀번호 길이가 8보다 작고, pw, pw2가 다를때
@@ -263,26 +318,21 @@ public class SellerSignUp extends JDialog{
 							JOptionPane.showMessageDialog(SellerSignUp.this, "전화번호를 확인해주세요.");
 						}
 						else {
+
 							userId = SignUpIDTxt.getText();
 							userpw = SignUpPWTxt.getText();
 							userName = SignUpNameTxt.getText();
 							userPhone = Method.PhoneNumSum(SignUpTelTxt.getText(), SignUpTelTxt2.getText(), SignUpTelTxt3.getText());
 							JOptionPane.showMessageDialog(SellerSignUp.this, "가입이 완료되었습니다.");
-							Method.InsertSeller(userId ,userpw, userName, userPhone);
+							
+							InsertMember(userId ,userpw, userName, userPhone);
 							setVisible(false);
+							
+
 						}
 					}
 				});
-				
-				// 닫기 버튼 액션
-				SignUpBackWard.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
-
-					}
-				});
+		
 	}
 
 	public static void main(String[] args) {
