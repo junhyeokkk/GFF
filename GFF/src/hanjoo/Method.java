@@ -1,5 +1,8 @@
 package hanjoo;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +16,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+
+import com.sun.corba.se.impl.protocol.giopmsgheaders.AddressingDispositionHelper;
 
 public class Method {
 	static private ArrayList<Member> memberList;
@@ -210,7 +216,7 @@ public class Method {
 	}
 
 	// 내가게 상점만 등록되도록
-	public static ArrayList<FoodShop> SeladdPnl(JPanel panel, GroupLayout groupLayout) {
+	public static ArrayList<FoodShop> SeladdPnl() {
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -219,9 +225,7 @@ public class Method {
 
 		try {
 			conn = DBUtil.getConnection();
-
-			sellerList = LoginCenter.getInstance().getSellerList();
-			// 나중에 1을 판매자 ID로 교체
+			
 			String s = "Select s_id, s_name,shop_pic From foodshop_t where sel_id = ";
 			s += "'" + LoginCenter.getInstance().getSelInfo().getSel_id() + "'";
 			stmt = conn.prepareStatement(s);
@@ -230,14 +234,12 @@ public class Method {
 			while (rs.next()) {
 				fs.add(new FoodShop(rs.getInt("s_id"), rs.getString("s_name"), rs.getString("shop_pic")));
 			}
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		} finally {
 			DBUtil.close(conn, stmt);
 		}
-
 		return fs;
 	}
 
@@ -247,94 +249,62 @@ public class Method {
 		return num1 + num2 + num3;
 	}
 
-	// 회원 로그인시 비교 메소드
+    // 회원 로그인시 비교 메소드 
 	public static void CheckMember(JPanel pnl, String a, String b) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-
-		try {
-			conn = DBUtil.getConnection();
-
-			String s = "Select * From member_t where login_id = ";
-			s += "'" + a + "'";
-			System.out.println(s);
-			stmt = conn.prepareStatement(s);
-			ResultSet rs = stmt.executeQuery(s);
-
-			while (rs.next()) {
-				LoginCenter.getInstance()
-						.setMyInfo(new Member(rs.getInt("m_id"), rs.getInt("busan_add_id"), rs.getString("login_id"),
-								rs.getString("password"), rs.getString("name"), rs.getString("phone"),
-								rs.getString("grade"), rs.getString("role"), rs.getString("current_address"),
-								rs.getString("created_date"), rs.getString("modifieded_date"), rs.getString("status")));
-			}
-
-			if (a.equals(LoginCenter.getInstance().getMyInfo().getId())) {
-				System.out.println("아이디 마즘");
-				if (b.equals(LoginCenter.getInstance().getMyInfo().getPassword())) {
-					
-					new FirstPage().setVisible(true);
-					Login.check = false;
-				} else {
-					JOptionPane.showMessageDialog(pnl, "비밀번호가 다릅니다.");
-				}
-			} else if(LoginCenter.getInstance().getMyInfo() == null) {
-				JOptionPane.showMessageDialog(pnl, "존재하지 않는 ID입니다.");
-				System.out.println("실패");
-				System.out.println(memberList.get(0).getId());
-				System.out.println(memberList.get(0).getPassword());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-		} finally {
-			DBUtil.close(conn, stmt);
-		}
-	}
+	      Connection conn  = null;
+	      PreparedStatement stmt = null;
+	      ArrayList<Member> ml = new ArrayList<>();
+	      try {   
+	         conn = DBUtil.getConnection();
+	         
+	         String s = "Select * From member_t";
+	         System.out.println(s);
+	         stmt = conn.prepareStatement(s);
+	         ResultSet rs = stmt.executeQuery(s);
+	         
+	         while(rs.next()) {     
+	            ml.add(new Member(rs.getInt("m_id"),rs.getInt("busan_add_id"),
+	                  rs.getString("login_id"),rs.getString("password"),rs.getString("name"),
+	                  rs.getString("phone"),rs.getString("grade"),rs.getString("role"),
+	                  rs.getString("current_address"),rs.getString("created_date"),rs.getString("modifieded_date"),
+	                  rs.getString("status")));      
+	         }
+	       
+	         for (int i = 0; i < ml.size(); i++) {
+	        	 
+	            if (!(a.equals(ml.get(i).getId()))) {
+	               System.out.println("id 틀림");
+	            } 
+	            
+	            else {
+	               if (b.equals(ml.get(i).getPassword())) {
+	                  System.out.println("로그인성공");
+	                  LoginCenter.getInstance().setMyInfo(ml.get(i));
+	                  Login.check = false;
+	               } 
+	               else {
+	                  System.out.println("id맞는데 비번이틀림");
+	               }
+	            }     
+	         }
+	         if (Login.check == false) {
+	        	 new FirstPage().setVisible(true);
+	         }
+	         else {
+	        	 JOptionPane.showMessageDialog(pnl, "정보가 맞지 않습니다");
+	         }
+	         
+	      }  catch (Exception e) {
+	         // TODO Auto-generated catch block
+	         System.out.println(e.getMessage());
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	    }
 
 	
    
-    /**
-     * 식당의 상세정보를 조회하는 쿼리문 작성 필요.
-     * where 조건에는 반드시 s_id 를 통해 조회가 되어야 하며,
-     * 반환은 FoodShop 단건으로 리턴이 되어야 한다.
-     * 
-     * @param s_id (식당 고유넘버)
-     * @return FoodShop
-     */
-    public static void getDetailRestInfo(int s_id) {
-    	
-    	
-    	Connection conn = null;
-		PreparedStatement stmt = null;
-    	
-    	
-    	try {
-			conn = DBUtil.getConnection();
-			
-			String sql = "SELECT * from FOODSHOP_T WHERE S_ID = ";
-	    	sql += s_id;
-	    	
-			System.out.println(sql);
-			stmt = conn.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery(sql);
 
-			while (rs.next()) {
-
-				LoginCenter.getInstance().setFoodInfo(new FoodShop(rs.getInt("s_id"), rs.getString("s_name"), rs.getInt("sel_id"), rs.getInt("busan_add_id"),
-						rs.getInt("type"), rs.getString("s_address"), rs.getString("shop_pic"), rs.getString("tel"), rs.getString("intro"),
-						rs.getInt("min_del_price"), rs.getInt("del_price"), rs.getInt("del_time"), rs.getDouble("rating"),
-						rs.getInt("dibs_cnt"), rs.getInt("rei_cnt"), rs.getString("oper_hours"), rs.getString("created_date"),
-						rs.getString("modifieded_date"), rs.getString("status"))) ;
-			}
-			System.out.println("rs 담긴 이름:      " + rs.getString("s_name"));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			DBUtil.close(conn, stmt);
-		}
- 	
-    }
     
     
     // 메뉴 넣는 메소드
@@ -398,49 +368,57 @@ public class Method {
 		return mml;
 	}
     
-	// 판매자 로그인시 비교 메소드
-	public static void CheckSeller(JPanel pnl, String a, String b) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
+	// 판매자 로그인시 비교 메소드 
+    public static void CheckSeller(JPanel pnl, String a, String b) {
+      Connection conn  = null;
+      PreparedStatement stmt = null;
+      ArrayList<Seller> ml = new ArrayList<>();
+      
+      try {   
+         conn = DBUtil.getConnection();
+         String s = "Select * From seller_t ";
+         System.out.println(s);
+         stmt = conn.prepareStatement(s);
+         ResultSet rs = stmt.executeQuery(s);
+         
+         while(rs.next()) {
+             
+         ml.add(new Seller(rs.getInt("sel_id"),rs.getString("s_id"),
+                 rs.getString("sel_log_id"),rs.getString("sel_pw"),rs.getString("sel_name"),
+                 rs.getString("sel_tel"),rs.getString("created_date"),rs.getString("modifieded_date"),
+                 rs.getString("status")));
+         }
 
-		try {
-			conn = DBUtil.getConnection();
-			String s = "Select * From seller_t where sel_log_id = ";
-			s += "'" + a + "'";
-			System.out.println(s);
-			stmt = conn.prepareStatement(s);
-			ResultSet rs = stmt.executeQuery(s);
-
-			while (rs.next()) {
-
-				LoginCenter.getInstance()
-						.setSelInfo(new Seller(rs.getInt("sel_id"), rs.getString("s_id"), rs.getString("sel_log_id"),
-								rs.getString("sel_pw"), rs.getString("sel_name"), rs.getString("sel_tel"),
-								rs.getString("created_date"), rs.getString("modifieded_date"), rs.getString("status")));
-			}
-
-			if (a.equals(LoginCenter.getInstance().getSelInfo().getSel_log_id())) {
-				System.out.println("아이디 마즘");
-				if (b.equals(LoginCenter.getInstance().getSelInfo().getPassword())) {
-					System.out.println("로그인 성공");
-
-					new SellerFirst().setVisible(true);
-					Login.check = false;
-				} else {
-					System.out.println("아이디 맞는데 비번 틀림");
-				}
-			} else {
-				System.out.println("실패");
-
-			}
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			DBUtil.close(conn, stmt);
-		}
-
-	}
+         for (int i = 0; i < ml.size(); i++) {
+            
+            if (!(a.equals(ml.get(i).getSel_log_id()))) {
+               System.out.println("id 틀림");
+            } 
+            
+            else {
+               if (b.equals(ml.get(i).getPassword())) {
+                  System.out.println("로그인성공");
+                  LoginCenter.getInstance().setSelInfo(ml.get(i));
+                  Login.check = false;
+               } 
+               else {
+                  System.out.println("id맞는데 비번이틀림");
+               }
+            }     
+         }
+         
+         if (Login.check == false) {
+            new SellerFirst().setVisible(true);
+         }
+         else {
+            JOptionPane.showMessageDialog(pnl, "정보가 맞지 않습니다");
+         }
+      }  catch (Exception e) {
+         System.out.println(e.getMessage());
+      } finally {
+         DBUtil.close(conn, stmt);
+      }
+    }
 	
 	// db에  회원정보 넣기
 	public static void InsertMember(String userId ,String userPw, int userAdrres, String userName, String userPhone, String userDetailAdrres) {
@@ -574,4 +552,370 @@ public class Method {
 		         DBUtil.close(conn, stmt);
 		      }
 		   }
+	 
+	   // db에서제일 높은 s_id return
+	   public static int shopUniqueNumber() {
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+	      
+	      int shopUniqueNumber = 0;
+	      
+	      try {
+	         conn = DBUtil.getConnection();
+
+	         String s = "select s_id from foodshop_t order by s_id desc limit 0, 1";
+	         System.out.println(s);
+	         
+	         stmt = conn.prepareStatement(s);
+	         ResultSet rs = stmt.executeQuery(s);
+	         
+	         while (rs.next()) {
+	           shopUniqueNumber = rs.getInt("s_id");
+	         }
+	         
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	      return shopUniqueNumber;
+	   }
+	   
+	   // 카테고리 번호 db에서 카테고리별 음식점 인설트를 위한 hashmap을 return 하는 메소드
+	   public static HashMap<String, Integer> CheckCategory() {
+		   
+		   HashMap<String, Integer> CategoryKey = new HashMap<String, Integer>();
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+	      try {
+	         conn = DBUtil.getConnection();
+
+	         String s = "select cat_name, cat_id From category_t";
+	         System.out.println(s);
+	         stmt = conn.prepareStatement(s);
+	         ResultSet rs = stmt.executeQuery(s);
+
+	         while (rs.next()) {
+	            CategoryKey.put(rs.getString("cat_name"), rs.getInt("cat_id"));
+	         }
+	         System.out.println(CategoryKey);
+
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	      
+	      return CategoryKey;
+	   }
+	   
+	   // 카테고리별 가게 테이블 db 에 insert 하기
+	   public static void InsertCat(int catId, int shopNum) {
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+	      try {
+	    	  
+	         conn = DBUtil.getConnection();
+	         String s = "INSERT INTO ca_food_t(cat_id, s_id) values";
+	         s += "('" + catId + "','" + shopNum + "' )";
+	         System.out.println(s);
+	         stmt = conn.prepareStatement(s);
+	         int i = stmt.executeUpdate(s);
+	         if (i == 1) {
+	            System.out.println("레코드 추가 성공");
+	         } else {
+	            System.out.println("레코드 추가 실패");
+	         }
+	      } catch (Exception e) {
+	         // TODO Auto-generated catch block
+	         System.out.println(e.getMessage());
+	         System.exit(0);
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	   }
+	   
+	   // 가게 table db 에 insert 하기
+	   public static void InsertShop(String name, int shopNum, int address_num, String address, String tell, int minPrice,
+	         int delTip, String openTime) {
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+	      try {
+	         conn = DBUtil.getConnection();
+
+	         String s = "INSERT INTO foodshop_t(s_name, sel_id, busan_add_id , s_address, tel, min_del_price, del_price, oper_hours) values";
+	         s += "('" + name + "','" + shopNum + "','" + address_num + "','" + address + "','" + tell + "','" + minPrice
+	               + "','" + delTip + "','" + openTime + "' )";
+	         System.out.println(s);
+	         stmt = conn.prepareStatement(s);
+	         int i = stmt.executeUpdate(s);
+	         if (i == 1) {
+	            System.out.println("레코드 추가 성공");
+	         } else {
+	            System.out.println("레코드 추가 실패");
+	         }
+	      } catch (Exception e) {
+	         // TODO Auto-generated catch block
+	         System.out.println(e.getMessage());
+	         System.exit(0);
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	   }
+	   
+	   // 지역 번호 db에서 불러오기
+	   public static  HashMap<String, Integer> CheckArea() {
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+	      
+	      HashMap<String, Integer> AreaKey = new HashMap<>();
+	      try {
+	         conn = DBUtil.getConnection();
+
+	         String s = "Select gu_name, busan_add_id From busan_add_t";
+	         System.out.println(s);
+	         stmt = conn.prepareStatement(s);
+	         ResultSet rs = stmt.executeQuery(s);
+
+	         while (rs.next()) {
+	            AreaKey.put(rs.getString("gu_name"), rs.getInt("busan_add_id"));
+	         }
+	         System.out.println(AreaKey);
+
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         DBUtil.close(conn, stmt);
+	      }
+	      
+	      return AreaKey;
+	   }
+	   
+	    /**
+	     * 식당의 상세정보를 조회하는 쿼리문 작성 필요.
+	     * where 조건에는 반드시 s_id 를 통해 조회가 되어야 하며,
+	     * 반환은 FoodShop 단건으로 리턴이 되어야 한다.
+	     * 
+	     * @param s_id (식당 고유넘버)
+	     * @return FoodShop
+	     */
+	    public static void getDetailRestInfo(int s_id) {
+	    	
+	    	
+	    	Connection conn = null;
+			PreparedStatement stmt = null;
+	    	
+	    	
+	    	try {
+				conn = DBUtil.getConnection();
+				
+				String sql = "SELECT * from FOODSHOP_T WHERE S_ID = ";
+		    	sql += s_id;
+		    	
+				System.out.println(sql);
+				stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery(sql);
+
+				while (rs.next()) {
+
+					LoginCenter.getInstance().setFoodInfo(new FoodShop(rs.getInt("s_id"), rs.getString("s_name"), rs.getInt("sel_id"), rs.getInt("busan_add_id"),
+							rs.getInt("type"), rs.getString("s_address"), rs.getString("shop_pic"), rs.getString("tel"), rs.getString("intro"),
+							rs.getInt("min_del_price"), rs.getInt("del_price"), rs.getInt("del_time"), rs.getDouble("rating"),
+							rs.getInt("dibs_cnt"), rs.getInt("rei_cnt"), rs.getString("oper_hours"), rs.getString("created_date"),
+							rs.getString("modifieded_date"), rs.getString("status"))) ;
+				}
+				System.out.println("rs 담긴 이름:      " + rs.getString("s_name"));
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			} finally {
+				DBUtil.close(conn, stmt);
+			}
+	 	
+	    }
+		   
+	    /**
+	     * 식당의 상세정보를 조회하는 쿼리문 작성 필요.
+	     * where 조건에는 반드시 s_id 를 통해 조회가 되어야 하며,
+	     * 반환은 FoodShop 단건으로 리턴이 되어야 한다.
+	     * 
+	     * @param s_id (식당 고유넘버)
+	     * @return FoodShop
+	     */
+	    public static void getDetailRestInfo2(int s_id) {
+	    	
+	    	
+	    	Connection conn = null;
+			PreparedStatement stmt = null;
+	    	
+	    	
+	    	try {
+				conn = DBUtil.getConnection();
+				
+				String sql = "SELECT * from FOODSHOP_T2 WHERE S_ID = ";
+		    	sql += s_id;
+		    	
+				System.out.println(sql);
+				stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery(sql);
+
+				while (rs.next()) {
+
+					LoginCenter.getInstance().setFoodInfo(new FoodShop(rs.getInt("s_id"), rs.getString("s_name"), rs.getInt("sel_id"), rs.getInt("busan_add_id"),
+							rs.getInt("type"), rs.getString("s_address"), rs.getString("shop_pic"), rs.getString("tel"), rs.getString("intro"),
+							rs.getInt("min_del_price"), rs.getInt("del_price"), rs.getInt("del_time"), rs.getDouble("rating"),
+							rs.getInt("dibs_cnt"), rs.getInt("rei_cnt"), rs.getString("oper_hours"), rs.getString("created_date"),
+							rs.getString("modifieded_date"), rs.getString("status"))) ;
+				}
+				System.out.println("rs 담긴 이름:      " + rs.getString("s_name"));
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			} finally {
+				DBUtil.close(conn, stmt);
+			}
+	 	
+	    }
+	   
+		/**
+		 * 각 메뉴의 [상세정보] 조회를 위한 액션
+		 * s_id(식당 고유키)를 파라미터로 받음
+		 * 
+		 * @param s_id
+		 * @return
+		 */
+
+		public static ActionListener detailBtnAction(int s_id) {
+			ActionListener actionListener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println(s_id);
+					
+					// 입력 받은 s_id로 db 검색하여 getInstance foodInfo에 등록
+					Method.getDetailRestInfo(s_id);
+					
+			System.out.println("겟인스턴스푸드인포:    " + LoginCenter.getInstance().getFoodInfo().getS_name());
+					new SellerRestDetail().setVisible(true);
+					
+					//상세화면을 조회화는 JFrame이 열려야함 . 
+					//상세화면을 열 때 필요한 데이터를 shopInfo에 담아서 쓰면 될 것으로 생각이 됨
+
+				}
+			};
+			return actionListener;
+		}
+		
+		/**
+		 * 각 메뉴의 [상세정보] 조회를 위한 액션
+		 * s_id(식당 고유키)를 파라미터로 받음
+		 * 
+		 * @param s_id
+		 * @return
+		 */
+
+		public static ActionListener detailBtnAction2(ArrayList<foodShopPanel> foodShopPanels, int s_id, JPanel pnl, ArrayList<FoodShop> foodList, JScrollPane scrollPane, GroupLayout groupLayout) {
+			ActionListener actionListener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println(s_id);
+					
+					// 입력 받은 s_id로 db 검색하여 getInstance foodInfo에 등록
+					Method.getDetailRestInfo2(s_id);
+					
+					System.out.println("겟인스턴스푸드인포:    " + LoginCenter.getInstance().getFoodInfo().getS_name());
+					panelList(foodShopPanels, foodList, scrollPane, groupLayout);
+					
+					//상세화면을 조회화는 JFrame이 열려야함 . 
+					//상세화면을 열 때 필요한 데이터를 shopInfo에 담아서 쓰면 될 것으로 생각이 됨
+
+				}
+			};
+			return actionListener;
+		}
+		
+		
+		public static ArrayList<JPanel> panelList(ArrayList<foodShopPanel> foodShopPanels, ArrayList<FoodShop> foodList, JScrollPane scrollPane, GroupLayout groupLayout) {
+			
+			
+			ArrayList<JPanel> panelList = new ArrayList<JPanel>();
+			int y = 10;
+			int z = 85;
+			int total = 0;
+			
+			for (int j = 0; j < foodList.size(); j++) {
+				
+	
+				JPanel RestPnl = new JPanel();
+				RestPnl.setBounds(0, y, 330, 75);
+				RestPnl.setLayout(null);
+				y += z;
+
+				JLabel RestID = new JLabel("상호명");
+				RestID.setFont(new Font("휴먼모음T", Font.PLAIN, 13));
+				RestID.setBounds(74, 10, 165, 58);
+				RestPnl.add(RestID);
+				RestID.setText(String.valueOf(foodList.get(j).getS_name()));
+
+				JButton DeleteBtn = new JButton("삭제");
+				DeleteBtn.setFont(new Font("휴먼모음T", Font.PLAIN, 9));
+				DeleteBtn.setBounds(251, 10, 67, 23);
+				RestPnl.add(DeleteBtn);
+
+				JButton jb = new JButton("상세정보");
+				jb.setFont(new Font("휴먼모음T", Font.PLAIN, 9));
+				jb.setBounds(251, 43, 67, 23);
+				RestPnl.add(jb);
+				
+				
+				jb.addActionListener(Method.detailBtnAction(foodList.get(j).getS_id()));
+				
+				
+				
+				JLabel Img = new JLabel("사진담으셍");
+				Img.setBounds(5, 10, 55, 55);
+				RestPnl.add(Img);
+				Img.setText(String.valueOf(foodList.get(j).getShop_pic()));
+
+				groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup().addGap(0, y, Short.MAX_VALUE)));
+			
+				panelList.add(RestPnl);
+				
+				
+				// MyRestList.removeBtn.add(DeleteBtn);
+				
+				
+			}
+			
+			return panelList;
+			
+		}
+		
+//		public static void deleteCreate(ArrayList<JButton> removeBtn, ArrayList<FoodShop> foodList, JPanel panel, GroupLayout groupLayout) {
+//		
+//			for (int i = 0; i < foodList.size(); i++) {
+//				
+//			removeBtn.get(i).addActionListener(new ActionListener() {
+//				
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//
+//					panel.removeAll();
+//					for (int i = 0; i < foodList.size(); i++) {
+//						panel.add(Method.panelList(foodList, groupLayout).get(i));
+//						
+//					}
+//				}
+//			});
+//
+//			}
+//
+//		}
+	   
+	 
+		
+	 
 }

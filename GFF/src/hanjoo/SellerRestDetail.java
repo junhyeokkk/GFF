@@ -12,6 +12,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class SellerRestDetail extends JFrame {
+public class SellerRestDetail extends JDialog{
 	private JPanel panel;
 	private int x = 40;
 	private int y = 55;
@@ -433,7 +434,7 @@ public class SellerRestDetail extends JFrame {
 		addRevPnl();
 
 		setSize(360, 640);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 
 	}
 

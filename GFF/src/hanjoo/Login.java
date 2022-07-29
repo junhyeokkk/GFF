@@ -142,6 +142,7 @@ public class Login extends JFrame {
 					String password = SignINPWTxt.getText();
 					System.out.println(loginid + password);
 					Method.CheckMember(pnl, loginid, password);
+					
 					if (check == false) {
 						dispose();
 					}

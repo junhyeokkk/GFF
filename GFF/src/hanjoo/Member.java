@@ -34,17 +34,12 @@ public class Member {
 	}
 	
 	// 회원가입할때
-	public Member(int busan_num, String id, String password, String name, String phone, String current_address) {
+	public Member(String id, String password) {
 		super();
-		this.busan_num = busan_num;
 		this.id = id;
 		this.password = password;
-		this.name = name;
-		this.phone = phone;
-		this.current_address = current_address;
 	}
-	
-
+		
 	public int getM_num() {
 		return m_num;
 	}

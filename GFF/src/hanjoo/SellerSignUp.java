@@ -45,7 +45,6 @@ public class SellerSignUp extends JDialog{
 
 
 	public SellerSignUp() {
-		
 		Method.selDoubleCheckIdList(IDlist);
 		ShowView();
 		Listener();

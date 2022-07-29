@@ -32,8 +32,9 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 
-public class AddRest extends JFrame {
+public class AddRest extends JDialog {
    private JTextField textField;
    private JTextField AddRestNameTxt;
    private JTextField AddRestTelTxt1;
@@ -48,8 +49,10 @@ public class AddRest extends JFrame {
    private JButton addCategoryBtn;
    private JComboBox AddCategoryCom;
    private JButton RemoveCtg1;
-   private HashMap<String, Integer> CategoryKey;
+   
+   
    private HashMap<String, Integer> AreaKey;
+   
    private int shopUniqueNumber;
 
    private JButton RemoveCtg3;
@@ -65,147 +68,7 @@ public class AddRest extends JFrame {
    private JLabel lblNewLabel_2;
 
    
-   // 제일 높은 s_id db에서 불러오기
-   private void shopUniqueNumber() {
-
-      Connection conn = null;
-      PreparedStatement stmt = null;
-      try {
-         conn = DBUtil.getConnection();
-
-         String s = "select s_id from foodshop_t order by s_id desc limit 0, 1";
-         System.out.println(s);
-         
-         stmt = conn.prepareStatement(s);
-         ResultSet rs = stmt.executeQuery(s);
-         
-         
-
-         while (rs.next()) {
-            shopUniqueNumber = rs.getInt("s_id");
-         }
-
-
-      } catch (Exception e) {
-         e.printStackTrace();
-      } finally {
-         DBUtil.close(conn, stmt);
-      }
-   }
-   
-   
-   
-   // 카테고리별 가게 테이블 db 에 insert 하기
-   private static void InsertCat(int catId, int shopNum) {
-
-      Connection conn = null;
-      PreparedStatement stmt = null;
-      try {
-         conn = DBUtil.getConnection();
-
-         String s = "INSERT INTO ca_food_t(cat_id, s_id) values";
-         s += "('" + catId + "','" + shopNum + "' )";
-         System.out.println(s);
-         stmt = conn.prepareStatement(s);
-         int i = stmt.executeUpdate(s);
-         if (i == 1) {
-            System.out.println("레코드 추가 성공");
-         } else {
-            System.out.println("레코드 추가 실패");
-         }
-      } catch (Exception e) {
-         // TODO Auto-generated catch block
-         System.out.println(e.getMessage());
-         System.exit(0);
-      } finally {
-         DBUtil.close(conn, stmt);
-      }
-   }
-
-   // 카테고리 번호 db에서 불러오기
-   private void CheckCategory() {
-
-      Connection conn = null;
-      PreparedStatement stmt = null;
-      try {
-         conn = DBUtil.getConnection();
-
-         String s = "select cat_name, cat_id From category_t";
-         System.out.println(s);
-         stmt = conn.prepareStatement(s);
-         ResultSet rs = stmt.executeQuery(s);
-
-         CategoryKey = new HashMap<>();
-         while (rs.next()) {
-            CategoryKey.put(rs.getString("cat_name"), rs.getInt("cat_id"));
-         }
-         System.out.println(CategoryKey);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-      } finally {
-         DBUtil.close(conn, stmt);
-      }
-   }
-
-   // 가게 table db 에 insert 하기
-   private static void InsertShop(String name, int shopNum, int address_num, String address, String tell, int minPrice,
-         int delTip, String openTime) {
-
-      Connection conn = null;
-      PreparedStatement stmt = null;
-      try {
-         conn = DBUtil.getConnection();
-
-         String s = "INSERT INTO foodshop_t(s_name, sel_id, busan_add_id , s_address, tel, min_del_price, del_price, oper_hours) values";
-         s += "('" + name + "','" + shopNum + "','" + address_num + "','" + address + "','" + tell + "','" + minPrice
-               + "','" + delTip + "','" + openTime + "' )";
-         System.out.println(s);
-         stmt = conn.prepareStatement(s);
-         int i = stmt.executeUpdate(s);
-         if (i == 1) {
-            System.out.println("레코드 추가 성공");
-         } else {
-            System.out.println("레코드 추가 실패");
-         }
-      } catch (Exception e) {
-         // TODO Auto-generated catch block
-         System.out.println(e.getMessage());
-         System.exit(0);
-      } finally {
-         DBUtil.close(conn, stmt);
-      }
-   }
-
-   // 지역 번호 db에서 불러오기
-   private void CheckArea() {
-
-      Connection conn = null;
-      PreparedStatement stmt = null;
-      try {
-         conn = DBUtil.getConnection();
-
-         String s = "Select gu_name, busan_add_id From busan_add_t";
-         System.out.println(s);
-         stmt = conn.prepareStatement(s);
-         ResultSet rs = stmt.executeQuery(s);
-
-         AreaKey = new HashMap<>();
-         while (rs.next()) {
-            AreaKey.put(rs.getString("gu_name"), rs.getInt("busan_add_id"));
-         }
-         System.out.println(AreaKey);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-      } finally {
-         DBUtil.close(conn, stmt);
-      }
-   }
-
    public AddRest() {
-      CheckCategory();
-      CheckArea();
       ShowView();
       Listener();
    }
@@ -427,8 +290,9 @@ public class AddRest extends JFrame {
       AddSellerIDTxt.setOpaque(true);
       pnl.add(AddSellerIDTxt);
 
+      setResizable(false);
       setSize(360, 640);
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 
    }
 
@@ -511,23 +375,6 @@ public class AddRest extends JFrame {
             CheckMethod.SellPhoneCheck2(AddRestTelTxt3.getText(), AddRestTelTxt3, e, pnl);
          }
       });
-      
-//      // 최소금액 숫자인지 체크
-//      AddMinAmountTxt.addKeyListener(new KeyAdapter() {
-//
-//         @Override
-//         public void keyReleased(KeyEvent e) {
-//            CheckMethod.OnlyNum(AddMinAmountTxt.getText(), AddMinAmountTxt, pnl);
-//         }
-//      });
-//
-//      AddDelivaryTipTxt.addKeyListener(new KeyAdapter() {
-//
-//         @Override
-//         public void keyReleased(KeyEvent e) {
-//            CheckMethod.OnlyNum(AddDelivaryTipTxt.getText(), AddDelivaryTipTxt, pnl);
-//         }
-//      });
 
       DuringTime1.addKeyListener(new KeyAdapter() {
 
@@ -689,30 +536,28 @@ public class AddRest extends JFrame {
                      AddRestTelTxt3.getText());
                String openTime = Method.OpenTime(DuringTime1.getText(), DuringTime2.getText(),
                      DuringTime3.getText(), DuringTime4.getText());
-               InsertShop(
+               Method.InsertShop(
 
                      AddRestNameTxt.getText(), LoginCenter.getInstance().getSelInfo().getSel_id(),
-                     AreaKey.get(AddAdressCom.getSelectedItem().toString()),
+                     Method.CheckArea().get(AddAdressCom.getSelectedItem().toString()),
                      AddAdressCom.getSelectedItem().toString(), num, Integer.parseInt(AddMinAmountTxt.getText()),
                      Integer.parseInt(AddDelivaryTipTxt.getText()), openTime
 
                );
  
-               shopUniqueNumber();
-               
                if (!(LabelCtg0.getText().equals(""))) {
-                  InsertCat(CategoryKey.get(LabelCtg0.getText()),
-                        shopUniqueNumber);
+                  Method.InsertCat(Method.CheckCategory().get(LabelCtg0.getText()),
+                		  Method.shopUniqueNumber());
                }
                if (!(LabelCtg1.getText().equals(""))) {
-                  InsertCat(CategoryKey.get(LabelCtg1.getText()),
-                        shopUniqueNumber);
+                  Method.InsertCat(Method.CheckCategory().get(LabelCtg1.getText()),
+                		  Method.shopUniqueNumber());
                }
                if (!(LabelCtg2.getText().equals(""))) {
-                  InsertCat(CategoryKey.get(LabelCtg2.getText()),
-                        shopUniqueNumber);
+                  Method.InsertCat(Method.CheckCategory().get(LabelCtg2.getText()),
+                		  Method.shopUniqueNumber());
                }
-               
+
                JOptionPane.showMessageDialog(pnl, "가게추가 완료");
 
                dispose();
@@ -720,6 +565,15 @@ public class AddRest extends JFrame {
 
          }
       });
+      
+      AddBackWard.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dispose();
+			
+		}
+	});
 
    }
 
